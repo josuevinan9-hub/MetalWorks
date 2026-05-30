@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MetalWorks — Taller de Metalmecánica</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF5C00;
+    --yellow: #FFD000;
+    --dark: #0D0D0D;
+    --mid: #1A1A1A;
+    --light: #F5F0EA;
+    --gray: #888;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--light);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,92,0,0.25);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    color: var(--orange);
+  }
+  .logo span { color: var(--yellow); }
+  nav ul { display: flex; gap: 2rem; list-style: none; }
+  nav ul a {
+    color: var(--light); text-decoration: none;
+    font-weight: 600; font-size: .85rem; letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  nav ul a:hover { color: var(--orange); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative; overflow: hidden;
+    background: var(--dark);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 70% 50%, rgba(255,92,0,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 30% 80%, rgba(255,208,0,0.07) 0%, transparent 60%);
+  }
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,92,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,92,0,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; max-width: 700px; }
+  .hero-tag {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--dark);
+    font-weight: 700; font-size: .75rem; letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: .3rem .9rem;
+    margin-bottom: 1.5rem;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 10px 100%);
+    animation: fadeUp .6s ease both;
+  }
+  h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: .95;
+    text-transform: uppercase;
+    animation: fadeUp .7s .1s ease both;
+  }
+  h1 em { color: var(--orange); font-style: normal; }
+  h1 .accent-line {
+    display: block;
+    -webkit-text-stroke: 2px var(--yellow);
+    color: transparent;
+  }
+  .hero-sub {
+    margin-top: 1.8rem;
+    font-size: 1.1rem; color: #aaa; line-height: 1.7;
+    max-width: 480px;
+    animation: fadeUp .7s .2s ease both;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-top: 2.5rem;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: var(--dark);
+    padding: .85rem 2rem;
+    font-weight: 700; font-size: .9rem; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+    transition: background .2s, transform .2s;
+  }
+  .btn-primary:hover { background: var(--yellow); transform: translateY(-2px); }
+  .btn-outline {
+    border: 2px solid var(--orange);
+    color: var(--orange);
+    padding: .8rem 2rem;
+    font-weight: 700; font-size: .9rem; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .btn-outline:hover { background: var(--orange); color: var(--dark); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; flex-wrap: wrap;
+    margin-top: 4rem;
+    animation: fadeUp .7s .4s ease both;
+  }
+  .stat { border-left: 3px solid var(--orange); padding-left: 1rem; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem; color: var(--yellow);
+    line-height: 1;
+  }
+  .stat-label { font-size: .8rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+
+  .hero-shape {
+    position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
+    width: 500px; height: 500px;
+    background: conic-gradient(from 0deg, var(--orange) 0%, transparent 40%);
+    opacity: 0.08;
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+  }
+  @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+  /* ── SERVICES ── */
+  #servicios {
+    padding: 6rem 3rem;
+    background: var(--mid);
+    position: relative; overflow: hidden;
+  }
+  .section-label {
+    font-size: .75rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--orange); font-weight: 700; margin-bottom: .5rem;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900; text-transform: uppercase;
+    line-height: 1; margin-bottom: 3rem;
+  }
+  .section-title span { color: var(--orange); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+  }
+  .service-card {
+    background: var(--dark);
+    padding: 2.5rem;
+    position: relative; overflow: hidden;
+    transition: transform .3s;
+    cursor: default;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--orange);
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform .3s ease;
+  }
+  .service-card:hover { transform: translateY(-4px); }
+  .service-card:hover::before { transform: scaleY(1); }
+  .service-icon {
+    font-size: 2.5rem; margin-bottom: 1rem;
+    display: block;
+  }
+  .service-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.6rem; font-weight: 900;
+    text-transform: uppercase; margin-bottom: .8rem;
+    color: var(--light);
+  }
+  .service-card p { color: #999; font-size: .95rem; line-height: 1.6; }
+  .service-num {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; color: rgba(255,92,0,0.08);
+    line-height: 1;
+  }
+
+  /* ── WHY US ── */
+  #nosotros {
+    padding: 6rem 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  @media(max-width:768px){
+    #nosotros { grid-template-columns: 1fr; }
+  }
+  .about-visual {
+    position: relative;
+    height: 420px;
+  }
+  .about-box {
+    position: absolute;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  .ab1 {
+    width: 260px; height: 260px;
+    background: var(--orange);
+    color: var(--dark);
+    font-size: 1.8rem; text-align: center; letter-spacing: 2px;
+    top: 0; left: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+    flex-direction: column;
+    padding: 2rem;
+  }
+  .ab1 strong { font-size: 5rem; line-height: 1; display: block; }
+  .ab2 {
+    width: 180px; height: 180px;
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 1rem; text-align: center; letter-spacing: 2px;
+    bottom: 20px; right: 0;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .ab2 strong { font-size: 3.5rem; line-height: 1; display: block; }
+  .ab3 {
+    width: 120px; height: 120px;
+    border: 3px solid var(--orange);
+    color: var(--orange);
+    font-size: 3rem;
+    bottom: 0; left: 160px;
+  }
+  .about-text h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 900; text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .about-text h2 span { color: var(--orange); }
+  .about-text p { color: #aaa; line-height: 1.7; margin-bottom: 1rem; }
+  .features { margin-top: 2rem; display: flex; flex-direction: column; gap: .8rem; }
+  .feature {
+    display: flex; align-items: center; gap: .8rem;
+    font-weight: 600;
+  }
+  .feature::before {
+    content: '▶';
+    color: var(--orange); font-size: .7rem;
+    flex-shrink: 0;
+  }
+
+  /* ── PROCESS ── */
+  #proceso {
+    padding: 6rem 3rem;
+    background: var(--mid);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0;
+    margin-top: 3rem;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 3.5rem; left: 0; right: 0;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--orange) 0, var(--orange) 20px, transparent 20px, transparent 40px);
+    z-index: 0;
+  }
+  .step { text-align: center; padding: 0 1rem; position: relative; z-index: 1; }
+  .step-num {
+    width: 70px; height: 70px;
+    background: var(--orange);
+    color: var(--dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.2rem;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+  .step h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem; font-weight: 900;
+    text-transform: uppercase; margin-bottom: .5rem;
+  }
+  .step p { font-size: .85rem; color: #888; line-height: 1.5; }
+
+  /* ── CONTACT ── */
+  #contacto {
+    padding: 6rem 3rem;
+    background: var(--dark);
+  }
+  .contact-inner {
+    max-width: 700px; margin: 0 auto; text-align: center;
+  }
+  .contact-inner .section-title { margin-bottom: 1rem; }
+  .contact-inner p { color: #999; margin-bottom: 3rem; font-size: 1rem; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin-bottom: 3rem;
+  }
+  .contact-item {
+    background: var(--mid);
+    border: 1px solid rgba(255,92,0,0.2);
+    padding: 1.5rem;
+    transition: border-color .2s;
+  }
+  .contact-item:hover { border-color: var(--orange); }
+  .contact-item .ci-icon { font-size: 1.8rem; margin-bottom: .5rem; }
+  .contact-item h4 {
+    font-size: .7rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray); margin-bottom: .3rem;
+  }
+  .contact-item p { color: var(--light); font-weight: 600; margin: 0; font-size: .95rem; }
+
+  .cta-banner {
+    background: var(--orange);
+    padding: 2.5rem;
+    clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  }
+  .cta-banner h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem; font-weight: 900;
+    text-transform: uppercase; color: var(--dark);
+    margin-bottom: .5rem;
+  }
+  .cta-banner p { color: rgba(0,0,0,0.65); margin-bottom: 1.5rem; }
+  .cta-banner .btn-dark {
+    background: var(--dark);
+    color: var(--light);
+    padding: .85rem 2.5rem;
+    font-weight: 700; font-size: .9rem; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    display: inline-block;
+    transition: background .2s, color .2s;
+  }
+  .cta-banner .btn-dark:hover { background: var(--yellow); color: var(--dark); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080808;
+    padding: 2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    border-top: 1px solid rgba(255,92,0,0.15);
+  }
+  footer .logo { font-size: 1.3rem; }
+  footer p { color: #555; font-size: .8rem; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media(max-width:600px){
+    nav { padding: 1rem 1.5rem; }
+    nav ul { display: none; }
+    #hero, #servicios, #nosotros, #proceso, #contacto { padding: 5rem 1.5rem 3rem; }
+    .steps::before { display: none; }
+    footer { padding: 1.5rem; justify-content: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Metal<span>Works</span></div>
+  <ul>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+  <div class="hero-shape"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Taller de Metalmecánica</div>
+    <h1>
+      Forjamos<br/>
+      <em>tu visión</em><br/>
+      <span class="accent-line">en acero</span>
+    </h1>
+    <p class="hero-sub">
+      Soldadura de precisión, estructuras metálicas y fabricación de puertas y ventanas a medida. Calidad artesanal con tecnología moderna.
+    </p>
+    <div class="hero-cta">
+      <a href="#contacto" class="btn-primary">Solicitar Cotización</a>
+      <a href="#servicios" class="btn-outline">Ver Servicios</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Proyectos completados</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Clientes satisfechos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <p class="section-label reveal">Lo que hacemos</p>
+  <h2 class="section-title reveal">Nuestros <span>Servicios</span></h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-num">01</span>
+      <span class="service-icon">🏗️</span>
+      <h3>Fabricación de Estructuras</h3>
+      <p>Diseñamos y construimos estructuras metálicas resistentes para obras civiles, industriales y comerciales. Cálculo y ejecución garantizados.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">02</span>
+      <span class="service-icon">🔥</span>
+      <h3>Soldadura de Precisión</h3>
+      <p>Soldadura MIG, TIG y por arco eléctrico. Uniones de alta resistencia para acero inoxidable, aluminio y hierro en cualquier espesor.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">03</span>
+      <span class="service-icon">🚪</span>
+      <h3>Puertas & Ventanas Metálicas</h3>
+      <p>Fabricamos puertas y ventanas a medida en hierro y aluminio. Diseños modernos, seguros y duraderos para hogares y empresas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about-visual reveal">
+    <div class="about-box ab1"><strong>15</strong>Años de<br/>Experiencia</div>
+    <div class="about-box ab3">⚙️</div>
+    <div class="about-box ab2"><strong>200+</strong>Obras<br/>Entregadas</div>
+  </div>
+  <div class="about-text reveal">
+    <p class="section-label">¿Por qué elegirnos?</p>
+    <h2>Trabajo hecho con <span>pasión</span> y precisión</h2>
+    <p>Somos un taller familiar con años de experiencia en el sector metal-mecánico. Cada proyecto lo tratamos con la misma dedicación y cuidado, desde una pequeña ventana hasta una gran estructura industrial.</p>
+    <p>Trabajamos con los mejores materiales y garantizamos acabados de alta calidad en cada entrega.</p>
+    <div class="features">
+      <div class="feature">Materiales certificados de primera calidad</div>
+      <div class="feature">Presupuesto sin costo y sin compromisos</div>
+      <div class="feature">Cumplimiento de plazos de entrega</div>
+      <div class="feature">Garantía en todos nuestros trabajos</div>
+      <div class="feature">Atención personalizada en cada proyecto</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso">
+  <p class="section-label reveal">¿Cómo trabajamos?</p>
+  <h2 class="section-title reveal">Nuestro <span>Proceso</span></h2>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <h4>Consulta</h4>
+      <p>Nos cuentas tu idea o necesidad y tomamos nota de todos los detalles.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">2</div>
+      <h4>Diseño</h4>
+      <p>Elaboramos un plano o boceto y te presentamos la propuesta técnica.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">3</div>
+      <h4>Cotización</h4>
+      <p>Te entregamos un presupuesto claro, sin letra pequeña ni sorpresas.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">4</div>
+      <h4>Fabricación</h4>
+      <p>Ejecutamos el trabajo con los más altos estándares de calidad.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">5</div>
+      <h4>Entrega</h4>
+      <p>Instalamos o entregamos el producto terminado con garantía incluida.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contact-inner">
+    <p class="section-label reveal">Hablemos</p>
+    <h2 class="section-title reveal">¿Tienes un <span>proyecto</span>?</h2>
+    <p class="reveal">Contáctanos y con gusto te asesoramos sin costo.</p>
+    <div class="contact-grid reveal">
+      <div class="contact-item">
+        <div class="ci-icon">📱</div>
+        <h4>Teléfono / WhatsApp</h4>
+        <p>+57 300 000 0000</p>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">📧</div>
+        <h4>Correo</h4>
+        <p>info@metalworks.com</p>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">📍</div>
+        <h4>Taller</h4>
+        <p>Tu ciudad, País</p>
+      </div>
+    </div>
+    <div class="cta-banner reveal">
+      <h3>¿Listo para empezar?</h3>
+      <p>Escríbenos ahora y recibe tu cotización en menos de 24 horas.</p>
+      <a href="https://wa.me/573000000000" class="btn-dark">Escribir por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Metal<span>Works</span></div>
+  <p>© 2026 MetalWorks — Taller de Metalmecánica. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
